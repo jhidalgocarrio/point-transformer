@@ -100,8 +100,8 @@ def main_worker(gpu, ngpus_per_node, argss):
             args.rank = args.rank * ngpus_per_node + gpu
         dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url, world_size=args.world_size, rank=args.rank)
 
-    if args.arch == 'pointtransformer_seg_repro':
-        from model.pointtransformer.pointtransformer_seg import pointtransformer_seg_repro as Model
+    if args.arch == 'pointtransformer_seg':
+        from model.pointtransformer.pointtransformer_seg import pointtransformer_seg as Model
     else:
         raise Exception('architecture not supported yet'.format(args.arch))
     model = Model(c=args.fea_dim, k=args.classes)
