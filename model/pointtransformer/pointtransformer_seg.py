@@ -3,6 +3,7 @@ import torch.nn as nn
 
 from lib.pointops.functions import pointops
 
+from util.model_util import get_n_params
 
 class PointTransformerLayer(nn.Module):
     def __init__(self, in_planes, out_planes, share_planes=8, nsample=16):
@@ -173,6 +174,14 @@ class PointTransformerSeg(nn.Module):
         return x
 
 
-def pointtransformer_seg_repro(**kwargs):
+def pointtransformer_seg(**kwargs):
     model = PointTransformerSeg(PointTransformerBlock, [2, 3, 4, 6, 3], **kwargs)
     return model
+
+if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    num_classes, num_batches, num_points_per_batch, node_features = 13, 1, 2048, 9
+    model = PointTransformerSeg(block=PointTransformerBlock, blocks=[2, 3, 4, 6, 3], c=node_features, k=num_classes)
+    model.to(device)
+    print("[PointTransformer]\n", model)
+    print("[PointTransformer] Number of parameters", get_n_params(model))
